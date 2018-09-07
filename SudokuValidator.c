@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 
 /* Params that go to thread */
 typedef struct {
@@ -8,9 +9,9 @@ typedef struct {
 } params; // parameters
 
 /* Prototypes */
-void * traverse_rows(void * _params); //walk_rows
-void * traverse_cols(void * _params); //walk_cols
-void * evaluate(void * _params); //check_square
+void * traverse_rows(void * _params);
+void * traverse_cols(void * _params);
+void * evaluate(void * _params);
 
 void * traverse_rows(void * _params) {
     params * data = (params *) _params;
@@ -71,6 +72,9 @@ void * evaluate(void * _params) {
 }
 
 int main(void) {
+    printf("Process at which main is executing is: %d\n", getpid());
+    system("ps >/dev/null 2>&1");
+
     /* read file */
     FILE *sudokuInput;
     sudokuInput = fopen("sudoku", "r");
@@ -81,10 +85,6 @@ int main(void) {
         fscanf(sudokuInput, "%1d", &numbersArray[k]);
     }
     
-    for (int k = 0; k < 81; k++) {
-        printf("Number is: %d\n\n", numbersArray[k]);
-    }
-
     int index = 0;
     for (int i = 0; i < 9; i ++) {
         for (int j = 0; j < 9; j++) {
@@ -93,19 +93,7 @@ int main(void) {
         }
     }
 
-    /*
-    int initialBoard[9][9] = {  
-            {6, 2, 4, 5, 3, 9, 1, 8, 7},
-            {5, 1, 9, 7, 2, 8, 6, 3, 4},
-            {8, 3, 7, 6, 1, 4, 2, 9, 5},
-            {1, 4, 3, 8, 6, 5, 7, 2, 9},
-            {9, 5, 8, 2, 4, 7, 3, 6, 1},
-            {7, 6, 2, 3, 9, 1, 4, 5, 8},
-            {3, 7, 1, 9, 5, 6, 8, 4, 2},
-            {4, 9, 6, 1, 8, 2, 5, 7, 3},
-            {2, 8, 5, 4, 7, 3, 9, 1, 6}
-        };
-    */
+    fork();        
 
     /* rows & cols checking */
     params * p0 = (params *) malloc(sizeof(params));
@@ -159,7 +147,7 @@ int main(void) {
     p9->col = 6;
     p9->board = initialBoard;
 
-    /* creating threads */
+    /* creating threads */    
     pthread_t t_rows, t_cols, t1, t2, t3, t4, t5, t6, t7, t8, t9;
 
     void * rows_all;
@@ -173,8 +161,8 @@ int main(void) {
     void * board7;
     void * board8;
     void * board9;
-
-    pthread_create(&t_rows, NULL, traverse_rows, (void *) p0);
+    
+    pthread_create(&t_rows, NULL, traverse_rows, (void *) p0);    
     pthread_create(&t_cols, NULL, traverse_cols, (void *) p0);
     pthread_create(&t1,     NULL, evaluate,      (void *) p1);
     pthread_create(&t2,     NULL, evaluate,      (void *) p2);
@@ -185,18 +173,29 @@ int main(void) {
     pthread_create(&t7,     NULL, evaluate,      (void *) p7);
     pthread_create(&t8,     NULL, evaluate,      (void *) p8);
     pthread_create(&t9,     NULL, evaluate,      (void *) p9);
-
+    
     pthread_join(t_rows, &rows_all);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t_cols, &cols_all);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t1, &board1);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t2, &board2);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t3, &board3);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t4, &board4);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t5, &board5);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t6, &board6);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t7, &board7);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t8, &board8);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
     pthread_join(t9, &board9);
+    printf("Process id of thread in evaluating one board in specific is: %d\n", getpid());
 
     /* check if solved */
     if ( (int) rows_all == 1 && (int) cols_all == 1 && (int) board1 == 1 && (int) board2 == 1
