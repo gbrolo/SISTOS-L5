@@ -71,6 +71,29 @@ void * evaluate(void * _params) {
 }
 
 int main(void) {
+    /* read file */
+    FILE *sudokuInput;
+    sudokuInput = fopen("sudoku", "r");
+    int numbersArray[81];
+    int initialBoard[9][9];
+
+    for (int k = 0; k < 81; k++) {
+        fscanf(sudokuInput, "%1d", &numbersArray[k]);
+    }
+    
+    for (int k = 0; k < 81; k++) {
+        printf("Number is: %d\n\n", numbersArray[k]);
+    }
+
+    int index = 0;
+    for (int i = 0; i < 9; i ++) {
+        for (int j = 0; j < 9; j++) {
+            initialBoard[i][j] = numbersArray[index];
+            index++;
+        }
+    }
+
+    /*
     int initialBoard[9][9] = {  
             {6, 2, 4, 5, 3, 9, 1, 8, 7},
             {5, 1, 9, 7, 2, 8, 6, 3, 4},
@@ -82,7 +105,8 @@ int main(void) {
             {4, 9, 6, 1, 8, 2, 5, 7, 3},
             {2, 8, 5, 4, 7, 3, 9, 1, 6}
         };
-    
+    */
+
     /* rows & cols checking */
     params * p0 = (params *) malloc(sizeof(params));
     p0->row = 0;
