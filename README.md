@@ -1,6 +1,9 @@
 # SISTOS-L5
 Sistemas Operativos, S.10 2018 - Laboratorio 5
 
+## Como correrlo
+Descargar o clonar el repositorio y luego ingresar al directorio donde se descargo el proyecto. Luego ejecute el comando ```make```. Esto compilara el proyecto y correra el validador de sudoku.
+
 ## Respuestas
 1. ¿Qué es una race condition y por qué hay que evitarlas? Ocurre cuando dos o mas threads pueden acceder a data compartida y tratan de cambiarla al mismo tiempo. Ya que el algoritmo de thread scheduling puede intercambiar entre threads en cualquier momento, no se sabe el orden en el que los threads tratarian de acceder a la data compartida.
 
